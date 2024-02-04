@@ -19,12 +19,13 @@ const BookSchema = new mongoose.Schema({
     },
     author:{
         type:mongoose.Types.ObjectId,
-        ref:"authors"
+        ref:"Author"
     },
-    genres:{
-        type:mongoose.Types.ObjectId,
-        ref:"genres"
-    },
+    genres:[{
+        type: mongoose.Types.ObjectId,
+        ref:"Genre",
+        require: true
+    }],
     images:[{
         type:String
     }]

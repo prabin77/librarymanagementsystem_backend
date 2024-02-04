@@ -12,7 +12,7 @@ next()
 
 router.get("/search",bookCtrl.getSearchResult)
 router.get("/:slug/slug",bookCtrl.getBookBySlug)
-router.get("/:genre/genre",bookCtrl.getBookByGenre)
+router.get("/genre/:id",bookCtrl.getBookByGenre)
 
 router.route("/")
         .post(auth,uploadDir,uploader.array('images'),bookCtrl.createBook)
@@ -23,4 +23,6 @@ router.route("/:id")
         .put(auth,uploadDir,uploader.array('images'),bookCtrl.updateBook)
         .delete(auth,checkPermission('admin'),bookCtrl.deleteBook)
 module.exports= router; 
+
+
 

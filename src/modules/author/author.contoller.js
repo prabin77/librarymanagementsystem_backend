@@ -67,6 +67,7 @@ class AuthorController{
             let response= await this._svc.authorUpdate(req.params.id,validdata)
             if(response){
                 res.json({
+
                     data:response,
                     status: true,
                     msg:"Author updated successfully",
@@ -77,6 +78,7 @@ class AuthorController{
 
         }catch(exception){
             next (exception)
+            
         }
     }
 

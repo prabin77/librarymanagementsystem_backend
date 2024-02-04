@@ -133,13 +133,7 @@ class GenreServices{
             let data= await GenreModel.findOne({
                 slug:slug
             })
-            if(data){
-                this._slugData=data
-                
-            }else{
-                throw {status:404, msg: "Genre does not exists"}
-
-            }
+           return data
 
            
         }catch(exception){

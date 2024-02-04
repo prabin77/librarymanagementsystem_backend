@@ -111,5 +111,31 @@ class GenreController{
             next(exception)
         }
     }
+
+    getGenreBySlug=async(req, res, next)=>{
+        
+        try{
+            let slug = req.params.slug;
+           
+            
+             let data = await  this._svc.getGenreBySlug(slug)
+            
+            if(data){
+                res.json({
+                data:data._id,
+                status:true,
+                msg:"Genre detail fetched"    
+            })
+            }else{
+                res.json({
+                    data:null,
+                    status:false,
+                    msg:"Genre does not  exists"
+                })
+            }
+        }catch(exception){
+            next( exception)
+        }
+    }
 }
 module.exports= GenreController;

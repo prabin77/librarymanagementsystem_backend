@@ -9,16 +9,16 @@ class BookController {
     createBook= async(req, res, next)=>{
         try{
             let data= new BookStoreTransformer(req).transformData();
-            console.log(data)
-        let validbook= await this._svc.validateBook(data)
-         validbook.createdBy = req.authUser._id;
+         await this._svc.validateBook(data)
+      
+         data.createdBy = req.authUser._id;
          let slug= slugify(data.title,{lower:true})
          
            await this._svc.getUniqueSlug(slug);
-            validbook.slug= await this._svc._slug
+            data.slug= await this._svc._slug
 
-         let response = await this._svc.storeBook(validbook);
-         console.log(response)
+         let response = await this._svc.storeBook(data);
+         
          if(response){
             res.json({
                 data: response,
@@ -28,7 +28,7 @@ class BookController {
             })
          }
         }catch(exception){
-            console.log(exception)
+            //console.log(exception)
             next(exception)
         }
 
@@ -39,7 +39,7 @@ class BookController {
         
         try{
             let pagination={
-                perpage: parseInt(req.query.perPage) ?? 20,
+                perpage: parseInt(req.query.perPage) ?? 12,
                 page:parseInt(req.query.page )?? 1
 
             }
@@ -69,7 +69,7 @@ class BookController {
 
             let data = req.body;
              data.quantity= Number(data.quantity)
-            
+             data.genres = data.genres.split(",")
             
             if(req.file){
                 data['images'] = req.file.filename;
@@ -129,15 +129,8 @@ getById=async(req, res, next)=>{
     getSearchResult= async( req, res, next)=>{
         try{
             let keyword =req.query.keyword
-            console.log(new RegExp(keyword))
-            let bookList= await BookModel.find({
-                title: new RegExp(keyword)
-            //    $or:[
-            //     {},
-            //     {description :new RegExp(keyword,'i')}
-            // ] 
-            })
-           //console.log(bookList)
+
+            let bookList= await this._svc.getBookBySearch(keyword)
             
             res.json({
                 data:bookList,
@@ -150,9 +143,10 @@ getById=async(req, res, next)=>{
     }
 
     getBookBySlug=async(req, res, next)=>{
+        
         try{
             let slug = req.params.slug;
-            
+           
              this._svc.getBookBySlug(slug)
              let data = await this._svc._slugData
             console.log(data)
@@ -175,12 +169,12 @@ getById=async(req, res, next)=>{
     }
     getBookByGenre=async(req, res, next)=>{
         try{
-            let genre = req.params.genre;
+            let id = req.params.id;
+            console.log(id)
+             let data= await this._svc.getBookByGenre(id)
+                                    
             
-             this._svc.getBookByGenre(genre)
-             let data = await this._svc._genreData
-            console.log(data)
-            if(data){
+           if(data){
                 res.json({
                 data:data,
                 status:true,
@@ -190,11 +184,12 @@ getById=async(req, res, next)=>{
                 res.json({
                     data:null,
                     status:false,
-                    msg:"Book does not  exists"
+                    msg:"Book does not  exist"
                 })
             }
         }catch(exception){
-            next( exception)
+            
+            next(exception)
         }
     }
 

@@ -11,7 +11,7 @@ class BookStoreTransformer{
             ...this._data
         };
         data.quantity = Number(data.quantity)
-        
+        data.genres = data.genres.split(",")
         if(this._files){
             let images = [];
             this._files.map((item) => {

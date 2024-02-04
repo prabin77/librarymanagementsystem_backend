@@ -8,7 +8,7 @@ const uploadDir = (req, res, next) => {
         next()
         }
         
-
+        router.get("/:slug/slug",genreCtrl.getGenreBySlug)
 router.route("/")
         .get(auth,genreCtrl.listGenre)
         .post(auth,uploadDir,uploader.single("image"),genreCtrl.createGenre)
